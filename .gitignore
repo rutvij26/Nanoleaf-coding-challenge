@@ -1,0 +1,14 @@
+# Environment configuration
+.env
+
+# Json data 
+/data
+
+# Dependencies
+/node_modules
+
+# MacOS
+.DS_Store
+
+# distributable
+/dist
