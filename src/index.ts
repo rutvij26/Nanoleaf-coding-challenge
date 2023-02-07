@@ -1,15 +1,25 @@
-import express, { Express, Request, Response } from 'express';
+import express, { Application, Request, Response } from 'express';
 import dotenv from 'dotenv';
+import routes from './api/routes';
 
 dotenv.config();
 
-const app: Express = express();
+const app: Application = express();
 const port = process.env.PORT ?? "3000";
 
-app.get('/', (req: Request, res: Response) => {
-    res.send('Server is started');
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.get('/', async (req: Request, res: Response): Promise<Response> => {
+    return res.status(200).send('Server is started');
 });
 
-app.listen(port, () => {
-    console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
-});
+app.use('/api/v1', routes);
+
+try {
+    app.listen(port, () => {
+        console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
+    });
+} catch (err) {
+    console.log(`Error occured : ${err}`);
+}
