@@ -1,5 +1,6 @@
 import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
+import db from '../models'
 
 dotenv.config();
 
@@ -10,6 +11,8 @@ app.get('/', (req: Request, res: Response) => {
     res.send('Server is started');
 });
 
-app.listen(port, () => {
-    console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
-});
+db.sequelize.sync({ alter: process.env.NODE_ENV === "development" }).then(() => {
+    app.listen(port, () => {
+        console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
+    });
+})

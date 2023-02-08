@@ -12,3 +12,6 @@
 
 # distributable
 /dist
+
+#migrations
+/migrations
