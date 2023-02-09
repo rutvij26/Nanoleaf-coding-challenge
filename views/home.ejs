@@ -1,0 +1,25 @@
+<html>
+
+<head>
+    <title>Home Page</title>
+</head>
+
+<body>
+    <nav>
+        <div style="float: right">
+            <% if (user) { %>
+            <p>Welcome, <%= user.email %></p>
+            <form action="/logout" method="post">
+                <button type="submit">Sign Out</button>
+            </form>
+            <% } else { %>
+            <a href="/login">Sign In</a>
+            <% } %>
+        </div>
+    </nav>
+
+    <h1>Home Page</h1>
+    <p>Welcome to the home page!</p>
+</body>
+
+</html>
