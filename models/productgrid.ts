@@ -37,6 +37,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
 
     static associate(models: any) {
       // define association here
+
     }
   }
   ProductGrid.init({
@@ -44,18 +45,58 @@ module.exports = (sequelize: any, DataTypes: any) => {
       type: DataTypes.STRING,
       primaryKey: true
     },
-    barcode: DataTypes.STRING,
-    parentSku: DataTypes.STRING,
-    regionCode: DataTypes.STRING,
-    itemType: DataTypes.STRING,
-    supplier: DataTypes.STRING,
-    brand: DataTypes.STRING,
-    variantName: DataTypes.STRING,
-    shortDesc: DataTypes.STRING,
-    stocklink: DataTypes.STRING,
-    lastUpdated: DataTypes.DATE
+    barcode: {
+      type: DataTypes.STRING,
+      unique: false,
+      allowNull: true
+    },
+    parentSku: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    regionCode: {
+      type: DataTypes.STRING,
+      unique: false,
+      allowNull: true
+    },
+    itemType: {
+      type: DataTypes.STRING,
+      unique: false,
+      allowNull: true
+    },
+    supplier: {
+      type: DataTypes.STRING,
+      unique: false,
+      allowNull: true
+    },
+    brand: {
+      type: DataTypes.STRING,
+      unique: false,
+      allowNull: true
+    },
+    variantName: {
+      type: DataTypes.STRING,
+      unique: false,
+      allowNull: true
+    },
+    shortDesc: {
+      type: DataTypes.STRING,
+      unique: false,
+      allowNull: true
+    },
+    stocklink: {
+      type: DataTypes.STRING,
+      unique: false,
+      allowNull: true
+    },
+    lastUpdated: {
+      type: DataTypes.DATE,
+      unique: false,
+      allowNull: true
+    }
   }, {
     sequelize,
+    timestamps: false,
     modelName: 'ProductGrid',
   });
   return ProductGrid;

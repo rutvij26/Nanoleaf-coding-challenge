@@ -65,6 +65,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
     Imperial_CBFT: DataTypes.FLOAT(10).UNSIGNED
   }, {
     sequelize,
+    timestamps: false,
     modelName: 'PackData',
   });
   return PackData;

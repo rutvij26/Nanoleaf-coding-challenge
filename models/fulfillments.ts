@@ -7,7 +7,7 @@ interface FulfillmentsAttributes {
   fulfill_Reg: string;
   fulfill_delivery: string;
   fulfill_deliveryid: string;
-  fulfill_date: string;
+  fulfill_date: Date;
 }
 
 module.exports = (sequelize: any, DataTypes: any) => {
@@ -22,11 +22,11 @@ module.exports = (sequelize: any, DataTypes: any) => {
     public fulfill_Reg!: string;
     public fulfill_delivery!: string;
     public fulfill_deliveryid!: string;
-    public fulfill_date!: string;
+    public fulfill_date!: Date;
     static associate(models: any) {
       // define association here
       Fulfillments.belongsTo(models.Sales, {
-        foreignKey: 'salesOrderID'
+        foreignKey: 'salesOrdersID'
       })
     }
   }
@@ -36,9 +36,10 @@ module.exports = (sequelize: any, DataTypes: any) => {
     fulfill_Reg: DataTypes.STRING,
     fulfill_delivery: DataTypes.STRING,
     fulfill_deliveryid: DataTypes.STRING,
-    fulfill_date: DataTypes.STRING
+    fulfill_date: DataTypes.DATE
   }, {
     sequelize,
+    timestamps: false,
     modelName: 'Fulfillments',
   });
   return Fulfillments;

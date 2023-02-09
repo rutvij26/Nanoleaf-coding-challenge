@@ -26,9 +26,9 @@ module.exports = (sequelize: any, DataTypes: any) => {
     public discountAmt!: number;
     public shipping!: number;
     public total!: number;
+    public dateCreated!: Date;
 
     //timestamp
-    public readonly dateCreated!: Date;
     static associate(models: any) {
       // define association here
     }
@@ -38,13 +38,41 @@ module.exports = (sequelize: any, DataTypes: any) => {
       type: DataTypes.STRING,
       primaryKey: true
     },
-    dateCreated: DataTypes.DATE,
-    salesChannel: DataTypes.STRING,
-    isoCurrency: DataTypes.STRING,
-    subtotal: DataTypes.FLOAT.UNSIGNED,
-    discountAmt: DataTypes.FLOAT.UNSIGNED,
-    shipping: DataTypes.FLOAT.UNSIGNED,
-    total: DataTypes.FLOAT.UNSIGNED
+    dateCreated: {
+      type: DataTypes.DATE,
+      unique: false,
+      allowNull: true
+    },
+    salesChannel: {
+      type: DataTypes.STRING,
+      unique: false,
+      allowNull: true
+    },
+    isoCurrency: {
+      type: DataTypes.STRING,
+      unique: false,
+      allowNull: true
+    },
+    subtotal: {
+      type: DataTypes.FLOAT.UNSIGNED,
+      unique: false,
+      allowNull: true
+    },
+    discountAmt: {
+      type: DataTypes.FLOAT.UNSIGNED,
+      unique: false,
+      allowNull: true
+    },
+    shipping: {
+      type: DataTypes.FLOAT.UNSIGNED,
+      unique: false,
+      allowNull: true
+    },
+    total: {
+      type: DataTypes.FLOAT.UNSIGNED,
+      unique: false,
+      allowNull: true
+    }
   }, {
     sequelize,
     modelName: 'Sales',

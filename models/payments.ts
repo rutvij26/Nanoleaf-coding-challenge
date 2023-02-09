@@ -20,7 +20,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
     static associate(models: any) {
       // define association here
       Payments.belongsTo(models.Sales, {
-        foreignKey: 'salesOrderID'
+        foreignKey: 'salesOrdersID'
       })
     }
   }
@@ -31,6 +31,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
     payment_date: DataTypes.DATE
   }, {
     sequelize,
+    timestamps: false,
     modelName: 'Payments',
   });
   return Payments;

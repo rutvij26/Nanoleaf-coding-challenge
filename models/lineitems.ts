@@ -16,7 +16,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
     static associate(models: any) {
       // define association here
       LineItems.belongsTo(models.Sales, {
-        foreignKey: 'salesOrderID'
+        foreignKey: 'salesOrdersID'
       })
       LineItems.belongsTo(models.ProductGrid, {
         foreignKey: 'productSKU'
@@ -27,6 +27,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
     product_num: DataTypes.INTEGER(5).UNSIGNED
   }, {
     sequelize,
+    timestamps: false,
     modelName: 'LineItems',
   });
   return LineItems;

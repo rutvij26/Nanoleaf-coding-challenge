@@ -3,13 +3,13 @@
 import { Model } from 'sequelize';
 
 interface PriceDataAttributes {
-  Buy_BOMUSD: number;
-  Buy_buyCanadaUSD: number;
-  Buy_buyFranceUSD: number;
-  Buy_buyHongKongUSD: number;
-  Sell_CAD: number;
-  Sell_USD: number;
-  Sell_HKD: number;
+  BOMUSD: number;
+  buyCanadaUSD: number;
+  buyFranceUSD: number;
+  buyHongKongUSD: number;
+  CAD: number;
+  USD: number;
+  HKD: number;
 }
 
 module.exports = (sequelize: any, DataTypes: any) => {
@@ -20,13 +20,13 @@ module.exports = (sequelize: any, DataTypes: any) => {
      * The `models/index` file will call this method automatically.
      */
 
-    public Buy_BOMUSD!: number;
-    public Buy_buyCanadaUSD!: number;
-    public Buy_buyFranceUSD!: number;
-    public Buy_buyHongKongUSD!: number;
-    public Sell_CAD!: number;
-    public Sell_USD!: number;
-    public Sell_HKD!: number;
+    public BOMUSD!: number;
+    public buyCanadaUSD!: number;
+    public buyFranceUSD!: number;
+    public buyHongKongUSD!: number;
+    public CAD!: number;
+    public USD!: number;
+    public HKD!: number;
 
     static associate(models: any) {
       // define association here
@@ -37,15 +37,44 @@ module.exports = (sequelize: any, DataTypes: any) => {
   }
 
   PriceData.init({
-    Buy_BOMUSD: DataTypes.INTEGER(10).UNSIGNED,
-    Buy_buyCanadaUSD: DataTypes.FLOAT(10).UNSIGNED,
-    Buy_buyFranceUSD: DataTypes.FLOAT(10).UNSIGNED,
-    Buy_buyHongKongUSD: DataTypes.FLOAT(10).UNSIGNED,
-    Sell_CAD: DataTypes.FLOAT(10).UNSIGNED,
-    Sell_USD: DataTypes.FLOAT(10).UNSIGNED,
-    Sell_HKD: DataTypes.FLOAT(10).UNSIGNED
+    BOMUSD: {
+      type: DataTypes.INTEGER(10).UNSIGNED,
+      allowNull: true,
+      unique: false
+    },
+    buyCanadaUSD: {
+      type: DataTypes.FLOAT(10).UNSIGNED,
+      allowNull: true,
+      unique: false
+    },
+    buyFranceUSD: {
+      type: DataTypes.FLOAT(10).UNSIGNED,
+      allowNull: true,
+      unique: false
+    },
+    buyHongKongUSD: {
+      type: DataTypes.FLOAT(10).UNSIGNED,
+      allowNull: true,
+      unique: false
+    },
+    CAD: {
+      type: DataTypes.FLOAT(10).UNSIGNED,
+      allowNull: true,
+      unique: false
+    },
+    USD: {
+      type: DataTypes.FLOAT(10).UNSIGNED,
+      allowNull: true,
+      unique: false
+    },
+    HKD: {
+      type: DataTypes.FLOAT(10).UNSIGNED,
+      allowNull: true,
+      unique: false
+    },
   }, {
     sequelize,
+    timestamps: false,
     modelName: 'PriceData',
   });
   return PriceData;

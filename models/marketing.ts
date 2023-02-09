@@ -21,7 +21,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
     public webVisitors!: number;
     public prClippings!: number;
 
-    public readonly dateCreated!: Date;
+    public dateCreated!: Date;
 
     static associate(models: any) {
       // define association here
@@ -32,11 +32,15 @@ module.exports = (sequelize: any, DataTypes: any) => {
       type: DataTypes.INTEGER.UNSIGNED,
       primaryKey: true
     },
-    dateCreated: DataTypes.DATE,
+    dateCreated: {
+      type: DataTypes.DATE,
+      allowNull: false
+    },
     webVisitors: DataTypes.INTEGER.UNSIGNED,
     prClippings: DataTypes.INTEGER.UNSIGNED
   }, {
     sequelize,
+    timestamps: false,
     modelName: 'Marketing',
   });
   return Marketing;

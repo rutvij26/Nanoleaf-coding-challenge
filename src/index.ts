@@ -7,6 +7,7 @@ import session from 'express-session';
 import bcrypt from 'bcrypt';
 import db from '../models';
 import { UserAttributes } from '../models/user';
+import { InsertData } from '../controllers/JsonDataIngestion';
 
 const flash = require('connect-flash');
 const User = require('../models/user');
@@ -161,6 +162,16 @@ app.post('/register', async (req, res, next) => {
         console.log("Error registering user into database", err);
     }
 });
+
+app.get("/insertData", async (req: Request, res: Response) => {
+    try {
+        await InsertData();
+        res.status(200).send("Data Insertion Completed!");
+    } catch (err) {
+        console.log("Error inserting data route : ", err);
+        return res.status(500)
+    }
+})
 
 db.sequelize.sync({ alter: process.env.NODE_ENV === "development" }).then(() => {
     app.listen(port, () => {
