@@ -4,22 +4,263 @@
     <title>Home Page</title>
 </head>
 
+<link rel="stylesheet" href="/style.css">
+
 <body>
     <nav>
-        <div style="float: right">
-            <% if (user) { %>
-            <p>Welcome, <%= user.email %></p>
-            <form action="/logout" method="post">
-                <button type="submit">Sign Out</button>
-            </form>
-            <% } else { %>
-            <a href="/login">Sign In</a>
-            <% } %>
+        <div class="container">
+            <a class="brand" href="/home">Nanoleaf Code Challenge</a>
+            <div style="float: right">
+                <% if (user) { %>
+                <p>Welcome, <%= user.email %></p>
+                <form action="/logout" method="post">
+                    <button type="submit">Sign Out</button>
+                </form>
+                <% } else { %>
+                <a href="/login">Sign In</a>
+                <% } %>
+            </div>
         </div>
     </nav>
+    <main>
+        <div class="container">
+            <div class="chart-container">
+                <canvas id="fulfillmentChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <canvas id="visitorChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <canvas id="salesOrdersByDateChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <canvas id="orderCountByDateChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <canvas id="salesRevenueChart"></canvas>
+            </div>
+        </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
 
-    <h1>Home Page</h1>
-    <p>Welcome to the home page!</p>
+    <script>
+        // Chart.js code to create the four charts
+        const visitorData = <%-JSON.stringify(visitorData) %>;
+        // const visitorData = '<%= visitorData %>';
+        console.log("visitorData", visitorData)
+        const fulfillmentData = <%-JSON.stringify(fulfillmentData) %>;
+        const salesOrdersByDate = <%-JSON.stringify(salesOrdersByDate) %>;
+        const orderCountByDate = <%-JSON.stringify(orderCountByDate) %>;
+        const salesData = <%-JSON.stringify(salesRevenue) %>;
+        console.log("orderCountByDate", orderCountByDate);
+
+        // Extract the week number and webVisitors values from the data
+        const dateCreated = visitorData.map(data => {
+            const date = new Date(data.dateCreated);
+            return date.toLocaleDateString();
+        });
+
+        const webVisitors = visitorData.map(data => data.webVisitors);
+
+        // Create the chart
+        const visitorChart = new Chart(document.getElementById('visitorChart'), {
+            type: 'line',
+            data: {
+                labels: dateCreated,
+                datasets: [{
+                    label: 'Web Visitors',
+                    data: webVisitors,
+                    borderColor: '#3e95cd',
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'Number of Visitors Over Time'
+                },
+                scales: {
+                    x: {
+                        type: 'time',
+                        time: {
+                            displayFormats: {
+                                quarter: 'MM YYYY'
+                            }
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            }
+        });
+
+        // Fulfillment Chart
+        const fulfillmentGroupedData = fulfillmentData.reduce((groupedData, currentValue) => {
+            console.log("currentValue.fulfill_date", currentValue.fulfill_date)
+            const D = new Date(currentValue.fulfill_date);
+            const date = D.toLocaleDateString();
+            if (!groupedData[date]) {
+                groupedData[date] = {
+                    date,
+                    count: 0,
+                };
+            }
+            groupedData[date].count += 1;
+            return groupedData;
+        }, {});
+
+        const fulfillmentChart = new Chart(document.getElementById('fulfillmentChart'), {
+            type: 'bar',
+            data: {
+                labels: Object.values(fulfillmentGroupedData).map(data => data.date),
+                datasets: [{
+                    label: 'Number of deliveries over time',
+                    data: Object.values(fulfillmentGroupedData).map(data => data.count),
+                    borderColor: '#3e95cd',
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'Number of deliveries Over Time'
+                },
+                scales: {
+                    x: {
+                        type: 'time',
+                        time: {
+                            displayFormats: {
+                                quarter: 'MM YYYY'
+                            }
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            }
+        });
+
+
+        const salesLabel = Object.keys(salesOrdersByDate)
+        const salesValues = Object.values(salesOrdersByDate)
+        // Quantity: Items Placed
+        const salesOrdersByDateChartData = {
+            labels: salesLabel,
+            datasets: [{
+                label: 'Number of Items placed over Time',
+                data: salesValues,
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        };
+
+        const salesOrdersByctx = document.getElementById('salesOrdersByDateChart').getContext('2d');
+        const salesOrdersByDateChart = new Chart(salesOrdersByctx, {
+            type: 'bar',
+            data: salesOrdersByDateChartData,
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+
+        const ordersLabel = Object.keys(orderCountByDate)
+        const ordersValues = Object.values(orderCountByDate)
+        // Quantity: Items Placed
+        const orderCountByDateChartData = {
+            labels: ordersLabel,
+            datasets: [{
+                label: 'Number of Orders placed over Time',
+                data: ordersValues,
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        };
+
+        const orderCountByctx = document.getElementById('orderCountByDateChart').getContext('2d');
+        const orderCountByDateChart = new Chart(orderCountByctx, {
+            type: 'bar',
+            data: orderCountByDateChartData,
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+
+        const salesRevenueChartData = {
+            labels: [],
+            datasets: [{
+                label: "Sales Revenue",
+                data: [],
+                backgroundColor: [
+                    "rgba(255, 99, 132, 0.2)",
+                    "rgba(54, 162, 235, 0.2)",
+                    "rgba(255, 206, 86, 0.2)",
+                    "rgba(75, 192, 192, 0.2)",
+                    "rgba(153, 102, 255, 0.2)",
+                ],
+                borderColor: [
+                    "rgba(255, 99, 132, 1)",
+                    "rgba(54, 162, 235, 1)",
+                    "rgba(255, 206, 86, 1)",
+                    "rgba(75, 192, 192, 1)",
+                    "rgba(153, 102, 255, 1)",
+                ],
+                borderWidth: 1,
+            }, ],
+        };
+
+        // Loop through the sales data and add the date and total to the chartData object
+        salesData.forEach((sale) => {
+            salesRevenueChartData.labels.push(sale.dateCreated);
+            salesRevenueChartData.datasets[0].data.push(sale.total);
+        });
+
+        // Create a new Chart.js bar chart
+        const salesRevenueChartCTX = document.getElementById("salesRevenueChart").getContext("2d");
+        const salesRevenueChart = new Chart(salesRevenueChartCTX, {
+            type: "bar",
+            data: salesRevenueChartData,
+            options: {
+                scales: {
+                    x: {
+                        type: 'time',
+                        time: {
+                            displayFormats: {
+                                quarter: 'MM YYYY'
+                            }
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }
+                },
+            },
+        });
+    </script>
+
 </body>
 
 </html>

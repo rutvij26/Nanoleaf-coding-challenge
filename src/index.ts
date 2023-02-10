@@ -8,6 +8,8 @@ import bcrypt from 'bcrypt';
 import db from '../models';
 import { UserAttributes } from '../models/user';
 import { InsertData } from '../controllers/JsonDataIngestion';
+import * as sass from 'node-sass';
+import { FetchFulfillmentsData, FetchVisitorData, FetchItemsPlacedOverTime, FetchOrderPlacedOverTime, FetchSalesRevenueOverTime } from '../controllers/homeController';
 
 const flash = require('connect-flash');
 const User = require('../models/user');
@@ -113,9 +115,22 @@ app.get('/', (req: Request, res: Response) => {
     }
 });
 
-app.get('/home', isLoggedIn, (req: Request, res: Response) => {
-    console.log("REQ user", req.user);
-    res.render('home', { user: req.user });
+app.get('/home', isLoggedIn, async (req: Request, res: Response) => {
+    const visitorData = await FetchVisitorData();
+    const fulfillmentData = await FetchFulfillmentsData();
+    const salesOrdersByDate = await FetchItemsPlacedOverTime();
+    const orderCountByDate = await FetchOrderPlacedOverTime();
+    const salesRevenue = await FetchSalesRevenueOverTime();
+
+    console.log("salesOrderByDate", salesOrdersByDate);
+    res.render('home', {
+        user: req.user,
+        visitorData: visitorData,
+        fulfillmentData: fulfillmentData,
+        salesOrdersByDate: salesOrdersByDate,
+        orderCountByDate: orderCountByDate,
+        salesRevenue: salesRevenue
+    });
 })
 
 app.get('/login', (req: Request, res: Response) => {
@@ -172,6 +187,20 @@ app.get("/insertData", async (req: Request, res: Response) => {
         return res.status(500)
     }
 })
+
+app.get('/style.css', (req: Request, res: Response) => {
+    sass.render({
+        file: './sass/home.scss',
+        outputStyle: 'expanded'
+    }, (error: any, result: any) => {
+        if (error) {
+            console.log("Sass file conversion error : ", error.message);
+        } else {
+            res.setHeader('Content-Type', 'text/css');
+            res.send(result.css);
+        }
+    });
+});
 
 db.sequelize.sync({ alter: process.env.NODE_ENV === "development" }).then(() => {
     app.listen(port, () => {
