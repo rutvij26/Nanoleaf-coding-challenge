@@ -127,7 +127,6 @@ app.get('/home', isLoggedIn, async (req: Request, res: Response) => {
     const orderCountByDate = await FetchOrderPlacedOverTime();
     const salesRevenue = await FetchSalesRevenueOverTime();
     
-    console.log("salesOrderByDate", salesOrdersByDate);
     res.render('home', {
         user: req.user,
         visitorData: visitorData,

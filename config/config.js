@@ -8,14 +8,14 @@ module.exports = {
   },
   "test": {
     "username": "root",
-    "password": null,
+    "password": "Password123#@!",
     "database": "nanoleaf_code_test",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "production": {
     "username": "root",
-    "password": null,
+    "password": "Password123#@!",
     "database": "nanoleaf_code_production",
     "host": "127.0.0.1",
     "dialect": "mysql"

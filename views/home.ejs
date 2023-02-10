@@ -5,6 +5,7 @@
 </head>
 
 <link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css" integrity="sha384-HzLeBuhoNPvSl5KYnjx0BT+WB0QEEqLprO+NBkkk5gbc67FTaL7XIGa2w1L0Xbgc" crossorigin="anonymous">
 
 <body>
     <nav>
@@ -25,18 +26,23 @@
     <main>
         <div class="container">
             <div class="chart-container">
+                <button id="download-csv-fulfillmentChart"><i class="fas fa-download"></i> CSV</button>
                 <canvas id="fulfillmentChart"></canvas>
             </div>
             <div class="chart-container">
+                <button id="download-csv-visitorChart"><i class="fas fa-download"></i> CSV</button>
                 <canvas id="visitorChart"></canvas>
             </div>
             <div class="chart-container">
+                <button id="download-csv-salesOrdersByDateChart"><i class="fas fa-download"></i> CSV</button>
                 <canvas id="salesOrdersByDateChart"></canvas>
             </div>
             <div class="chart-container">
+                <button id="download-csv-orderCountByDateChart"><i class="fas fa-download"></i> CSV</button>
                 <canvas id="orderCountByDateChart"></canvas>
             </div>
             <div class="chart-container">
+                <button id="download-csv-salesRevenueChart"><i class="fas fa-download"></i> CSV</button>
                 <canvas id="salesRevenueChart"></canvas>
             </div>
         </div>
@@ -62,6 +68,44 @@
             const date = new Date(data.dateCreated);
             return date.toLocaleDateString();
         });
+
+        function downloadCSV(chart) {
+            // Extract the chart data
+            let data = chart.data.datasets[0].data;
+            let labels = chart.data.labels;
+            let title = chart.data.title;
+
+            // Create a CSV string from the data
+            let csv = 'Label,Value\n';
+            for (let i = 0; i < data.length; i++) {
+              csv += `${labels[i]},${data[i]}\n`;
+            }
+        
+            // Download the CSV file
+            let hiddenElement = document.createElement('a');
+            hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
+            hiddenElement.target = '_blank';
+            hiddenElement.download = `data.csv`;
+            hiddenElement.click();
+        }
+        
+        document.getElementById('download-csv-fulfillmentChart').addEventListener('click', function() {
+            downloadCSV(fulfillmentChart);
+        });
+        document.getElementById('download-csv-visitorChart').addEventListener('click', function() {
+            downloadCSV(visitorChart);
+        });
+        document.getElementById('download-csv-salesOrdersByDateChart').addEventListener('click', function() {
+            downloadCSV(salesOrdersByDateChart);
+        });
+        document.getElementById('download-csv-orderCountByDateChart').addEventListener('click', function() {
+            downloadCSV(orderCountByDateChart);
+        });
+        document.getElementById('download-csv-salesRevenueChart').addEventListener('click', function() {
+            downloadCSV(salesRevenueChart);
+        });
+
+
 
         const webVisitors = visitorData.map(data => data.webVisitors);
 
