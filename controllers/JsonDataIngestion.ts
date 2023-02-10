@@ -54,6 +54,18 @@ const InsertMarketingData = async () => {
     }
 }
 
+export const checkData = async () => {
+    try {
+        return await db.Marketing.findAll().then((data: any) => {
+            return data && data.length !== 0
+        })
+    } catch (err) {
+        console.log("Checking data inside Marketing Table Failed!", err);
+        return err
+        
+    }
+}
+
 const InsertProductGridData = async () => {
     try {
         await readJSONFile(JSONFilePaths[1]).then((data) => {
@@ -214,8 +226,9 @@ const InsertFullfillmentsData = async () => {
         salesOrders_allkeys.forEach((key) => {
             (Object.keys(salesOrdersdata[key]["fulfillments"]) ?? []).forEach((key2) => {
                 // const date = moment(salesOrdersdata[key]["fulfillments"][key2]["fullfill_date"], 'YYYY-MM-DD HH:mm:ss').toDate();
-                const date = moment(salesOrdersdata[key]["fulfillments"][key2]["fullfill_date"]);
+                const date = moment(salesOrdersdata[key]["fulfillments"][key2]["fulfill_date"]);
                 const dateISO = new Date(date.toISOString());
+                console.log("-------DATE--------", dateISO);
                 const input = {
                     "fulfull_id": salesOrdersdata[key]["fulfillments"][key2]["fulfull_id"],
                     "fulfill_loc": salesOrdersdata[key]["fulfillments"][key2]["fulfill_loc"],

@@ -7,12 +7,11 @@ import session from 'express-session';
 import bcrypt from 'bcrypt';
 import db from '../models';
 import { UserAttributes } from '../models/user';
-import { InsertData } from '../controllers/JsonDataIngestion';
+import { InsertData, checkData } from '../controllers/JsonDataIngestion';
 import * as sass from 'node-sass';
 import { FetchFulfillmentsData, FetchVisitorData, FetchItemsPlacedOverTime, FetchOrderPlacedOverTime, FetchSalesRevenueOverTime } from '../controllers/homeController';
 
 const flash = require('connect-flash');
-const User = require('../models/user');
 
 dotenv.config();
 
@@ -116,12 +115,18 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.get('/home', isLoggedIn, async (req: Request, res: Response) => {
+    const checkFlag =  await checkData();
+    if (!checkFlag) {
+        console.log("Data is not present inside Database! Inserting :)")
+        await InsertData();
+        console.log("Inserting Data Complete!")
+    } 
     const visitorData = await FetchVisitorData();
     const fulfillmentData = await FetchFulfillmentsData();
     const salesOrdersByDate = await FetchItemsPlacedOverTime();
     const orderCountByDate = await FetchOrderPlacedOverTime();
     const salesRevenue = await FetchSalesRevenueOverTime();
-
+    
     console.log("salesOrderByDate", salesOrdersByDate);
     res.render('home', {
         user: req.user,
@@ -202,7 +207,21 @@ app.get('/style.css', (req: Request, res: Response) => {
     });
 });
 
-db.sequelize.sync({ alter: process.env.NODE_ENV === "development" }).then(() => {
+app.get('/loginStyle.css', (req: Request, res: Response) => {
+    sass.render({
+        file: './sass/login.scss',
+        outputStyle: 'expanded'
+    }, (error: any, result: any) => {
+        if (error) {
+            console.log("Sass login style file conversion error : ", error.message);
+        } else {
+            res.setHeader('Content-Type', 'text/css');
+            res.send(result.css);
+        }
+    });
+});
+
+db.sequelize.sync().then(() => {
     app.listen(port, () => {
         console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
     });

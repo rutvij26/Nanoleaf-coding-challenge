@@ -2,7 +2,7 @@ module.exports = {
   "development": {
     "username": "root",
     "password": "Password123#@!",
-    "database": "nanoleaf_code_development",
+    "database": "nanoleaf_code_development_2",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
